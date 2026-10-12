@@ -1,5 +1,6 @@
 using March7thHoney.Kcp;
 using March7thHoney.Proto;
+using March7thHoney.Data.Custom;
 
 namespace March7thHoney.GameServer.Server.Packet.Send.Gacha;
 
@@ -15,12 +16,7 @@ public class PacketSetGachaDecideItemScRsp : BasePacket
         var proto = new SetGachaDecideItemScRsp
         {
             Retcode = (uint)retcode,
-            NBLOJLDLBEB = new NEIMLKNMDBM
-            {
-                MMELNCHIDNC = gachaId,
-                OJNEFBJHCCK = { order },
-                GFANBHAEKOK = decideItemType
-            }
+            NBLOJLDLBEB = GachaProtocol.BuildSelection(gachaId, decideItemType, order)
         };
 
         SetData(proto);
