@@ -11,11 +11,12 @@ public class PacketGetQuestDataScRsp : BasePacket
     {
         var proto = new GetQuestDataScRsp();
         foreach (var quest in GameData.QuestDataData.Values)
-            proto.QuestList.Add(new Proto.Quest
-            {
-                Id = (uint)quest.QuestID,
-                Status = player.QuestManager?.GetQuestStatus(quest.QuestID) ?? QuestStatus.QuestNone
-            });
+        {
+            var data = player.QuestManager?.Data.Quests.GetValueOrDefault(quest.QuestID)?.ToProto()
+                ?? new Proto.Quest { Id = (uint)quest.QuestID };
+            data.Status = player.QuestManager?.GetQuestStatus(quest.QuestID) ?? QuestStatus.QuestNone;
+            proto.QuestList.Add(data);
+        }
         SetData(proto);
     }
 }

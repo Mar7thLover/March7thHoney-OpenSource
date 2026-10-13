@@ -11,7 +11,7 @@ public partial class InventoryManager
         if (avatar != null)
         {
             var rankUpItem = Player.InventoryManager!.GetItem(itemId + 10000);
-            if ((avatar.PathInfos[itemId].Rank + rankUpItem?.Count ?? 0) <= 5)
+            if ((avatar.PathInfos[itemId].Rank + (rankUpItem?.Count ?? 0)) <= 5)
                 return await PutItem(itemId + 10000, 1);
             return null;
         }

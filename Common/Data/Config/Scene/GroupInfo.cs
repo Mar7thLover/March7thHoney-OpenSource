@@ -193,16 +193,13 @@ public partial class SavedValueLoadCondition
             }
         }
 
-        switch (Operation)
+        return Operation switch
         {
-            case OperationEnum.And when UtilTools.CheckAnd(conditionChecks, defaultResult):
-            case OperationEnum.Or when UtilTools.CheckOr(conditionChecks, defaultResult):
-                return true;
-            case OperationEnum.Not:
-                return !UtilTools.CheckOr(conditionChecks, defaultResult);
-            default:
-                return defaultResult;
-        }
+            OperationEnum.And => UtilTools.CheckAnd(conditionChecks, defaultResult),
+            OperationEnum.Or => UtilTools.CheckOr(conditionChecks, defaultResult),
+            OperationEnum.Not => !UtilTools.CheckOr(conditionChecks, defaultResult),
+            _ => defaultResult
+        };
     }
 }
 

@@ -20,6 +20,8 @@ public sealed class HandlerGridFightFinishTutorialCsReq : PlayerHandler
 {
     protected override Task OnHandle(Connection connection, PlayerInstance player)
     {
-        return Task.CompletedTask;
+        return connection.SendPacket(GridFightPacketFactory.CreatePacket(
+            CmdIds.GridFightFinishTutorialScRsp,
+            new GridFightFinishTutorialScRsp()));
     }
 }

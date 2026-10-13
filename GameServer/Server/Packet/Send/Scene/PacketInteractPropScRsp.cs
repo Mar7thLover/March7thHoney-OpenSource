@@ -8,7 +8,7 @@ public class PacketInteractPropScRsp : BasePacket
 {
     public PacketInteractPropScRsp(EntityProp? prop) : base(CmdIds.InteractPropScRsp)
     {
-        var proto = new InteractPropScRsp();
+        var proto = new InteractPropScRsp { Retcode = prop == null ? (uint)Retcode.RetFail : 0 };
 
         if (prop != null)
         {

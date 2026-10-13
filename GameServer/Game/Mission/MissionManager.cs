@@ -969,11 +969,20 @@ public class MissionManager(PlayerInstance player) : BasePlayerManager<MissionDa
 
         HashSet<int> mainIds = [];
         HashSet<int> subIds = [];
+        HashSet<int> invalidSubIds = [];
         var currentPlane = Player.SceneInstance?.PlaneId ?? 0;
         var currentFloor = Player.SceneInstance?.FloorId ?? 0;
 
         void AddSubMissionStatus(SubMissionInfo subMission, int mainMissionId)
         {
+            if (!GameData.SubMissionData.ContainsKey(subMission.ID) ||
+                !GameData.SubMissionInfoData.TryGetValue(subMission.ID, out var canonical) ||
+                canonical.MainMissionId != mainMissionId ||
+                (subMission.MainMissionID != 0 && subMission.MainMissionID != mainMissionId))
+            {
+                invalidSubIds.Add(subMission.ID);
+                return;
+            }
             if (!subIds.Add(subMission.ID)) return;
 
             info.SceneMissionInfo.SubMissionStatusList.Add(new Proto.Mission
@@ -1020,12 +1029,16 @@ public class MissionManager(PlayerInstance player) : BasePlayerManager<MissionDa
 
                 foreach (var missionId in pkg.MainMissionIDList)
                 {
+                    if (!GameData.MainMissionData.ContainsKey(missionId)) continue;
                     var mid = (uint)missionId;
                     if (info.SceneMissionInfo.FinishedMainMissionIdList.Contains(mid)) continue;
                     if (info.SceneMissionInfo.UnfinishedMainMissionIdList.Contains(mid)) continue;
                     info.SceneMissionInfo.UnfinishedMainMissionIdList.Add(mid);
                 }
             }
+        if (invalidSubIds.Count > 0)
+            new March7thHoney.Util.Logger("Mission").Warn(
+                $"Skipped {invalidSubIds.Count} invalid scene mission references on floor={currentFloor}.");
     }
 
     #endregion

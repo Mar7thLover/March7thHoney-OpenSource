@@ -11,7 +11,7 @@ public class HandlerSetGachaDecideItemCsReq : Handler<SetGachaDecideItemCsReq>
     {
         var manager = player.GachaManager!;
         // 4.3: MBOEFLAHLEM -> GFANBHAEKOK (decide item type), DGOMHDMJHEK -> OJNEFBJHCCK (selected items)
-        var retcode = manager.SetCharacterEventNonFeaturedPool((int)req.GachaId, (int)req.GFANBHAEKOK,
+        var retcode = await manager.SetCharacterEventNonFeaturedPoolAsync((int)req.GachaId, (int)req.GFANBHAEKOK,
             req.OJNEFBJHCCK);
         var savedOrder = retcode == Retcode.RetSucc
             ? manager.GetCharacterEventNonFeaturedPool().Select(id => (uint)id).ToList()
